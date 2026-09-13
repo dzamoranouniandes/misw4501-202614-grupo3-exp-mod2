@@ -14,6 +14,8 @@ No se incluyen API Gateway ni BFF móvil porque no son necesarios para validar e
 
 `liveness-adapter` contiene el puerto `LivenessProvider`, el caso de uso de verificación, una implementación Didit y la configuración de proveedor activo. La interfaz pública normaliza la respuesta y no filtra el contrato de Didit.
 
+La explicación de la preparación, las evidencias requeridas y el protocolo de ejecución posterior está en [docs/experiment-protocol.md](docs/experiment-protocol.md).
+
 ## Levantar el entorno
 
 Requiere Docker Desktop con Compose v2.
@@ -86,4 +88,3 @@ Antes de implementar el proveedor alterno, conserve:
 - commit de esta línea base.
 
 El diff que se mida en la siguiente fase debe compararse contra dicho commit, no contra una versión anterior que no tenía el adaptador.
-
