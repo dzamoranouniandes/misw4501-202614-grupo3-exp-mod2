@@ -4,6 +4,8 @@
 
 El experimento valida el atributo **facilidad de modificación** ante el cambio de proveedor de liveness. No busca evaluar una aplicación de seguros completa ni la integración real de un proveedor alterno en esta primera fase.
 
+Los diagramas de componentes, despliegue, clases y secuencias se encuentran en [Arquitectura visual](visual-architecture.md).
+
 | Fase | Objetivo | Resultado esperado |
 |---|---|---|
 | Preparación arquitectónica — actual | Construir la frontera que aisla Didit y establecer una línea base ejecutable. | Identity puede ejecutar onboarding sin conocer el contrato de Didit. |
@@ -66,13 +68,13 @@ Las pruebas unitarias se encuentran junto al componente que validan:
 | `liveness-adapter/tests/test_use_cases.py` | Se usa el proveedor configurado y no se puede seleccionar uno no registrado. |
 | `didit-mock/tests/test_mock.py` | El mock devuelve `PASSED` o `FAILED` con evidencia sintética. |
 
-Ejecutar todas las pruebas:
+Ejecutar todas las pruebas desde la raíz:
 
 ```powershell
-cd identity-service; python -m pytest
-cd ../liveness-adapter; python -m pytest
-cd ../didit-mock; python -m pytest
+.\run-tests.ps1
 ```
+
+No se debe ejecutar `pytest` directamente desde la raíz, ya que cada microservicio tiene su propio paquete `app`; hacerlo provoca un error `ModuleNotFoundError`. El script cambia al directorio de cada microservicio antes de ejecutar su suite.
 
 Resultado de la línea base validada localmente: **5 pruebas unitarias aprobadas**. Los servicios también fueron levantados con Docker Compose y respondieron saludables en los puertos 8001, 8002 y 8003.
 

@@ -15,6 +15,7 @@ No se incluyen API Gateway ni BFF móvil porque no son necesarios para validar e
 `liveness-adapter` contiene el puerto `LivenessProvider`, el caso de uso de verificación, una implementación Didit y la configuración de proveedor activo. La interfaz pública normaliza la respuesta y no filtra el contrato de Didit.
 
 La explicación de la preparación, las evidencias requeridas y el protocolo de ejecución posterior está en [docs/experiment-protocol.md](docs/experiment-protocol.md).
+Los diagramas de componentes, despliegue, clases y secuencia están en [docs/visual-architecture.md](docs/visual-architecture.md).
 
 ## Levantar el entorno
 
@@ -71,10 +72,10 @@ En esta preparación solo está registrado `didit`. El endpoint `PUT /admin/live
 Cada repositorio se prueba de forma independiente:
 
 ```powershell
-cd identity-service; python -m pytest
-cd ../liveness-adapter; python -m pytest
-cd ../didit-mock; python -m pytest
+.\run-tests.ps1
 ```
+
+No ejecute `pytest` directamente desde la raíz: los tres repositorios usan un paquete local llamado `app`, y pytest no puede resolver los tres a la vez desde ese directorio. El script ejecuta cada suite desde el directorio correcto.
 
 Los tests no necesitan Docker ni conectarse a servicios externos.
 
