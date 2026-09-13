@@ -1,0 +1,42 @@
+services:
+  didit-mock:
+    build: ./didit-mock
+    ports:
+      - "8003:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  liveness-adapter:
+    build: ./liveness-adapter
+    environment:
+      LIVENESS_PROVIDER: ${LIVENESS_PROVIDER:-didit}
+      DIDIT_BASE_URL: ${DIDIT_BASE_URL:-http://didit-mock:8000}
+    ports:
+      - "8002:8000"
+    depends_on:
+      didit-mock:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  identity-service:
+    build: ./identity-service
+    environment:
+      LIVENESS_ADAPTER_URL: ${LIVENESS_ADAPTER_URL:-http://liveness-adapter:8000}
+    ports:
+      - "8001:8000"
+    depends_on:
+      liveness-adapter:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+

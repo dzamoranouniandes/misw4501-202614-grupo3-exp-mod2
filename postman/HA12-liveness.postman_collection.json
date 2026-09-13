@@ -1,0 +1,73 @@
+{
+  "info": {
+    "name": "HA12 - Liveness baseline",
+    "description": "Colección de línea base para el experimento de sustitución de proveedor.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "identityUrl", "value": "http://localhost:8001" },
+    { "key": "adapterUrl", "value": "http://localhost:8002" },
+    { "key": "correlationId", "value": "ha12-postman-001" }
+  ],
+  "item": [
+    {
+      "name": "Consultar proveedor activo",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{adapterUrl}}/admin/liveness-provider"
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "exec": ["pm.test('Proveedor inicial Didit', function () {", "  pm.response.to.have.status(200);", "  pm.expect(pm.response.json().provider).to.eql('didit');", "});"] }
+      }]
+    },
+    {
+      "name": "Seleccionar proveedor activo",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": { "mode": "raw", "raw": "{\n  \"provider\": \"didit\"\n}" },
+        "url": "{{adapterUrl}}/admin/liveness-provider"
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "exec": ["pm.test('Proveedor activo actualizado', function () {", "  pm.response.to.have.status(200);", "  pm.expect(pm.response.json().provider).to.eql('didit');", "});"] }
+      }]
+    },
+    {
+      "name": "Onboarding aprobado",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "X-Correlation-Id", "value": "{{correlationId}}" }
+        ],
+        "body": { "mode": "raw", "raw": "{\n  \"customer_id\": \"customer-test-001\",\n  \"evidence_ref\": \"synthetic-selfie-approved\"\n}" },
+        "url": "{{identityUrl}}/onboarding/liveness"
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "exec": ["pm.test('Onboarding aprobado y contrato normalizado', function () {", "  pm.response.to.have.status(200);", "  const body = pm.response.json();", "  pm.expect(body.status).to.eql('approved');", "  pm.expect(body.correlation_id).to.eql(pm.variables.get('correlationId'));", "  pm.expect(body).to.not.have.property('provider');", "});"] }
+      }]
+    },
+    {
+      "name": "Onboarding rechazado",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "X-Correlation-Id", "value": "{{correlationId}}-rejected" }
+        ],
+        "body": { "mode": "raw", "raw": "{\n  \"customer_id\": \"customer-test-002\",\n  \"evidence_ref\": \"synthetic-selfie-rejected\"\n}" },
+        "url": "{{identityUrl}}/onboarding/liveness"
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "exec": ["pm.test('Onboarding rechazado y contrato normalizado', function () {", "  pm.response.to.have.status(200);", "  pm.expect(pm.response.json().status).to.eql('rejected');", "});"] }
+      }]
+    }
+  ]
+}
