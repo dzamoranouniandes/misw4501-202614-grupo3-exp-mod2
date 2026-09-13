@@ -120,6 +120,32 @@ docker compose logs identity-service liveness-adapter didit-mock
 
 El mismo `correlation_id` debe aparecer en la recepción y finalización de Identity, en la selección de Didit por el adaptador y en la recepción del mock. La colección [HA12-liveness.postman_collection.json](../postman/HA12-liveness.postman_collection.json) contiene las solicitudes y aserciones de Postman, incluidos los escenarios aprobado, rechazado y proveedor no disponible.
 
+### Evidencias capturadas de la línea base
+
+**Figura 1. Contenedores desplegados y saludables.** Los tres servicios requeridos por el experimento están activos y exponen los puertos definidos en Docker Compose.
+
+![Contenedores de la línea base saludables](evidences/01-compose-healthy.png)
+
+**Figura 2. Proveedor activo inicial.** La API administrativa del adaptador confirma que `didit` es el proveedor configurado antes del cambio experimental.
+
+![Consulta del proveedor Didit](evidences/02-provider-didit.png)
+
+**Figura 3. Onboarding aprobado con Didit.** Postman entra por Identity y recibe una respuesta normalizada; no expone el DTO específico del proveedor.
+
+![Onboarding aprobado con Didit](evidences/03-onboarding-approved.png)
+
+**Figura 4. Ejecución del adaptador.** El adaptador recibe la solicitud interna de verificación como parte del flujo de onboarding.
+
+![Registro de ejecución del adaptador](evidences/04-adapter-log.png)
+
+**Figura 5. Pruebas unitarias aprobadas.** El script ejecuta las tres suites desde sus respectivos directorios y reporta cinco pruebas aprobadas.
+
+![Pruebas unitarias aprobadas](evidences/05-unit-tests-passed.png)
+
+**Figura 6. Aplicación de la arquitectura hexagonal.** Se evidencia la separación entre núcleo, puertos y adaptadores de infraestructura en los servicios que forman la línea base.
+
+![Arquitectura hexagonal implementada](evidences/06-hexagonal-architecture.png)
+
 ## 6. Ejecución posterior del experimento
 
 1. Crear `liveness-adapter/app/infrastructure/alternative_provider.py`, que implemente `LivenessProvider`.
