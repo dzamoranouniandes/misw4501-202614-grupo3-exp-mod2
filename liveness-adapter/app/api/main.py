@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 
 from app.application.use_cases import ChangeActiveProvider, ProviderNotRegisteredError, VerifyLiveness
 from app.domain.models import VerificationCommand
+from app.infrastructure.alternative_provider import AlternativeProvider
 from app.infrastructure.configuration import InMemoryActiveProviderConfiguration
 from app.infrastructure.didit_provider import DiditProvider
 
@@ -31,6 +32,7 @@ class ProviderSelection(BaseModel):
 configuration = InMemoryActiveProviderConfiguration(os.getenv("LIVENESS_PROVIDER", "didit"))
 providers = {
     "didit": DiditProvider(os.getenv("DIDIT_BASE_URL", "http://localhost:8003")),
+    "alternative": AlternativeProvider(),
 }
 
 
