@@ -1,5 +1,6 @@
 import os
 import uuid
+import logging
 from typing import Annotated
 
 from fastapi import FastAPI, Header, HTTPException
@@ -10,6 +11,7 @@ from app.domain.models import LivenessRequest
 from app.infrastructure.http_liveness_client import HttpLivenessAdapterClient
 
 app = FastAPI(title="Identity Service", version="0.1.0")
+logger = logging.getLogger("uvicorn.error")
 
 
 class OnboardingRequest(BaseModel):
@@ -40,6 +42,7 @@ def start_onboarding(
     x_correlation_id: Annotated[str | None, Header()] = None,
 ) -> OnboardingResponse:
     correlation_id = x_correlation_id or str(uuid.uuid4())
+    logger.info("onboarding_received correlation_id=%s", correlation_id)
     request = LivenessRequest(
         customer_id=body.customer_id,
         evidence_ref=body.evidence_ref,
@@ -48,10 +51,11 @@ def start_onboarding(
     try:
         result = get_use_case().execute(request)
     except Exception as error:
+        logger.error("onboarding_failed correlation_id=%s", correlation_id)
         raise HTTPException(status_code=502, detail="Liveness verification is unavailable") from error
+    logger.info("onboarding_completed correlation_id=%s status=%s", correlation_id, result.status.value)
     return OnboardingResponse(
         verification_id=result.verification_id,
         status=result.status.value,
         correlation_id=result.correlation_id,
     )
-

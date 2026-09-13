@@ -4,7 +4,7 @@ import httpx
 
 from app.domain.models import LivenessStatus, VerificationCommand, VerificationResult
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("uvicorn.error")
 
 
 class DiditProvider:
@@ -32,4 +32,3 @@ class DiditProvider:
             status=status,
             correlation_id=command.correlation_id,
         )
-

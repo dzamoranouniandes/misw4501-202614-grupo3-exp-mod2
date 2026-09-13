@@ -118,7 +118,7 @@ La evidencia operativa se obtiene con:
 docker compose logs identity-service liveness-adapter didit-mock
 ```
 
-El mismo `correlation_id` debe aparecer en la solicitud de Identity, en la selección de Didit por el adaptador y en la recepción del mock. La colección [HA12-liveness.postman_collection.json](../postman/HA12-liveness.postman_collection.json) contiene las solicitudes y aserciones de Postman.
+El mismo `correlation_id` debe aparecer en la recepción y finalización de Identity, en la selección de Didit por el adaptador y en la recepción del mock. La colección [HA12-liveness.postman_collection.json](../postman/HA12-liveness.postman_collection.json) contiene las solicitudes y aserciones de Postman, incluidos los escenarios aprobado, rechazado y proveedor no disponible.
 
 ## 6. Ejecución posterior del experimento
 

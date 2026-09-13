@@ -68,6 +68,22 @@
         "listen": "test",
         "script": { "exec": ["pm.test('Onboarding rechazado y contrato normalizado', function () {", "  pm.response.to.have.status(200);", "  pm.expect(pm.response.json().status).to.eql('rejected');", "});"] }
       }]
+    },
+    {
+      "name": "Onboarding con proveedor no disponible",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "X-Correlation-Id", "value": "{{correlationId}}-error" }
+        ],
+        "body": { "mode": "raw", "raw": "{\n  \"customer_id\": \"customer-test-003\",\n  \"evidence_ref\": \"synthetic-selfie-error\"\n}" },
+        "url": "{{identityUrl}}/onboarding/liveness"
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "exec": ["pm.test('Falla técnica normalizada', function () {", "  pm.response.to.have.status(502);", "  pm.expect(pm.response.json().detail).to.eql('Liveness verification is unavailable');", "});"] }
+      }]
     }
   ]
 }
