@@ -16,6 +16,7 @@ No se incluyen API Gateway ni BFF móvil porque no son necesarios para validar e
 
 La explicación de la preparación, las evidencias requeridas y el protocolo de ejecución posterior está en [docs/experiment-protocol.md](docs/experiment-protocol.md).
 Los diagramas de componentes, despliegue, clases y secuencia están en [docs/visual-architecture.md](docs/visual-architecture.md).
+El reporte de resultados de la sustitución con `alternative` está en [docs/experiment-results.md](docs/experiment-results.md).
 
 ## Levantar el entorno
 
@@ -65,7 +66,7 @@ La configuración pertenece al adaptador y se consulta mediante:
 GET http://localhost:8002/admin/liveness-provider
 ```
 
-En esta preparación solo está registrado `didit`. El endpoint `PUT /admin/liveness-provider` permite seleccionar un proveedor ya registrado. En la ejecución posterior del experimento se añadirá el segundo adaptador **solo dentro de `liveness-adapter`**, se registrará y se cambiará esta parametrización sin modificar Identity ni la colección Postman.
+La línea base inicia con `didit`. El experimento incorporó `alternative` como segundo provider mock dentro de `liveness-adapter`; el endpoint `PUT /admin/liveness-provider` permite seleccionar cualquiera de los proveedores registrados sin modificar Identity ni la colección Postman. Consulte [los resultados](docs/experiment-results.md) para la evidencia de la sustitución.
 
 ## Pruebas
 

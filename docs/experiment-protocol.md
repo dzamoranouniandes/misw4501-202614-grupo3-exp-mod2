@@ -148,6 +148,8 @@ El mismo `correlation_id` debe aparecer en la recepción y finalización de Iden
 
 ## 6. Ejecución posterior del experimento
 
+La siguiente secuencia fue ejecutada y sus resultados están en [experiment-results.md](experiment-results.md):
+
 1. Crear `liveness-adapter/app/infrastructure/alternative_provider.py`, que implemente `LivenessProvider`.
 2. Registrar `alternative` dentro de `liveness-adapter`.
 3. Ejecutar las pruebas unitarias y agregar las pruebas de contrato del proveedor alterno.
