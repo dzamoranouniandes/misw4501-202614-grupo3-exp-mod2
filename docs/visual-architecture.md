@@ -174,8 +174,8 @@ sequenceDiagram
 
     Dev->>A: Agrega AlternativeProvider que implementa LivenessProvider
     Dev->>A: Registra "alternative" dentro del adaptador
-    P->>A: PUT /admin/liveness-provider {alternative}
-    A-->>P: 200 {provider: alternative}
+    P->>A: PUT /admin/liveness-provider, provider alternative
+    A-->>P: 200, active provider alternative
     P->>I: Mismo POST /onboarding/liveness
     I->>A: Misma solicitud normalizada
     A->>AP: verify(command)
