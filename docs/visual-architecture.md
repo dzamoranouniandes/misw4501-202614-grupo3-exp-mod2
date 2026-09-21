@@ -190,16 +190,11 @@ sequenceDiagram
 
 ```mermaid
 flowchart LR
-    subgraph Unchanged["No se modifican"]
-        I[identity-service]
-        PC["Colección Postman"]
-        DC["docker-compose.yml"]
-    end
-    subgraph Changed["Único alcance permitido del cambio"]
-        LA["liveness-adapter\nAlternativeProvider + registro + pruebas"]
-    end
-    LA -->|"PUT provider=alternative"| I
-    PC --> I
+    PC["Postman sin cambios"] --> I["Identity service sin cambios"]
+    I --> LA["Liveness adapter modificado"]
+    DC["Docker Compose sin cambios"]
+    AP["AlternativeProvider nuevo"] --> LA
+    RT["Registro y pruebas modificados"] --> LA
 ```
 
 La evidencia final se obtiene comparando el commit de línea base contra el commit de `AlternativeProvider`. El resultado de `git diff --name-only` debe listar únicamente rutas bajo `liveness-adapter/`.
